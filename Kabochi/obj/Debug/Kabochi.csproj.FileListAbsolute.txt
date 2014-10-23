@@ -1,0 +1,18 @@
+d:\users\temp.dvfu\documents\visual studio 2012\Projects\Kabochi\Kabochi\bin\Debug\Kabochi.exe.config
+d:\users\temp.dvfu\documents\visual studio 2012\Projects\Kabochi\Kabochi\bin\Debug\Kabochi.exe
+d:\users\temp.dvfu\documents\visual studio 2012\Projects\Kabochi\Kabochi\bin\Debug\Kabochi.pdb
+d:\users\temp.dvfu\documents\visual studio 2012\Projects\Kabochi\Kabochi\obj\Debug\Kabochi.exe
+d:\users\temp.dvfu\documents\visual studio 2012\Projects\Kabochi\Kabochi\obj\Debug\Kabochi.pdb
+d:\users\temp.dvfu\documents\visual studio 2012\Projects\Kabochi\Kabochi\obj\Debug\Kabochi.csprojResolveAssemblyReference.cache
+D:\Work\Kabochi\Kabochi\bin\Debug\Kabochi.exe.config
+D:\Work\Kabochi\Kabochi\obj\Debug\Kabochi.exe
+D:\Work\Kabochi\Kabochi\obj\Debug\Kabochi.pdb
+D:\Work\Kabochi\Kabochi\obj\Debug\Kabochi.csprojResolveAssemblyReference.cache
+D:\Work\Kabochi\Kabochi\bin\Debug\Kabochi.exe
+D:\Work\Kabochi\Kabochi\bin\Debug\Kabochi.pdb
+C:\Users\KirUn\Documents\GitHub\Kabochi\Kabochi\bin\Debug\Kabochi.exe.config
+C:\Users\KirUn\Documents\GitHub\Kabochi\Kabochi\obj\Debug\Kabochi.exe
+C:\Users\KirUn\Documents\GitHub\Kabochi\Kabochi\obj\Debug\Kabochi.pdb
+C:\Users\KirUn\Documents\GitHub\Kabochi\Kabochi\bin\Debug\Kabochi.exe
+C:\Users\KirUn\Documents\GitHub\Kabochi\Kabochi\bin\Debug\Kabochi.pdb
+C:\Users\KirUn\Documents\GitHub\Kabochi\Kabochi\obj\Debug\Kabochi.csprojResolveAssemblyReference.cache
