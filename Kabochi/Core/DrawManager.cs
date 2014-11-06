@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.Threading;
+using System.Diagnostics;
 
 namespace Kabochi
 {
@@ -14,53 +15,142 @@ namespace Kabochi
             public Game game;
             Font font;
             SolidBrush drawBrush;
+            delegate void RenderFunc();
+            RenderFunc RenderFunction;
             Graphics formGraphics;
+            public BufferedGraphics grafx;
+            BufferedGraphicsContext context;
+            public View view;
+            Stopwatch watch;
+            double fps;
+            int last;
+            bool stillDrawing;
+            bool resizing;
+
+            Graphics g;
   
-            Image newImage = Image.FromFile("face2.png");
+            Bitmap newImage;
+            void Render()
+            {
+                // рисовать из двойного буфера
+                //grafx.Render(Graphics.FromHwnd(game.gameForm.Handle));
+                //lock (this)
+                //{
+                    //if (stillDrawing) return;
+                    //stillDrawing = true;
+                    //lock (grafx)
+                    //{
+                        grafx.Render(Graphics.FromHwnd(game.gameForm.Handle));
+                    //}
+                    stillDrawing = false;
+                //}
+            }
             public DrawManager(Game game_m)
             {
                 game = game_m;
-
+                newImage = new Bitmap(320, 240);
+                g = Graphics.FromImage(newImage);
+                RenderFunction = new RenderFunc(Render);
                 formGraphics = game.gameForm.CreateGraphics();
                 game.gameForm.Resize += gameForm_Resize;
                 
                 Console.WriteLine(formGraphics.DpiX+"   "+formGraphics.DpiY);
-                formGraphics.ScaleTransform(game.gameForm.Width / 320, game.gameForm.Height / 240);
+
+                view = new View(20, 20, 1920, 1080);
                 // Retrieves the BufferedGraphicsContext for the 
                 // current application domain.
-                //context = BufferedGraphicsManager.Current;
+                context = BufferedGraphicsManager.Current;
 
-                // Sets the maximum size for the primary graphics buffer
-                // of the buffered graphics context for the application
-                // domain.  Any allocation requests for a buffer larger 
-                // than this will create a temporary buffered graphics 
-                // context to host the graphics buffer.
-                //context.MaximumBuffer = new Size(game.gameForm.Width + 1, game.gameForm.Height + 1);
-                //formGraphics = context.Allocate(game.gameForm.CreateGraphics(), new Rectangle(0, 0, game.gameForm.Width, game.gameForm.Height));
-
+                context.MaximumBuffer = new Size((int)view.width + 1, (int)view.height + 1);
+                
+                grafx = context.Allocate(formGraphics, new Rectangle(0, 0, game.gameForm.Width, game.gameForm.Height));
+                //grafx.Graphics.ScaleTransform(1, 1);
                 drawBrush = new SolidBrush(Color.Black);
                 font = new System.Drawing.Font("Arial", 16);
+                watch = new Stopwatch();
+                watch.Start();
+                fps = 0.0;
+                last = 0;
             }
 
             void gameForm_Resize(object sender, EventArgs e)
             {
-                //formGraphics = game.gameForm.CreateGraphics();
-                //formGraphics.ScaleTransform(game.gameForm.Width / 640, game.gameForm.Height / 480);
-                formGraphics.ScaleTransform(game.gameForm.Width / 320, game.gameForm.Height / 240);
-                Console.WriteLine(game.gameForm.Width + "   " + game.gameForm.Height);
+                //grafx = context.Allocate(formGraphics, new Rectangle(0, 0, game.gameForm.Width, game.gameForm.Height));
+                //grafx.Graphics.ScaleTransform(game.gameForm.Width / game.gameForm.defaultWidth, game.gameForm.Height / game.gameForm.defaultHeight);
+                
+                //formGraphics.ScaleTransform(1.1f, 1.1f);
+                //grafx = context.Allocate(formGraphics, new Rectangle(0, 0, game.gameForm.Width, game.gameForm.Height));
+                /*lock (this)
+                {
+                    resizing = true;
+                    lock (grafx)
+                    {*/
+                        if (grafx != null)
+                        {
+                            grafx.Dispose();
+                            grafx = null;
+                        }
+                        grafx = context.Allocate(formGraphics, new Rectangle(0, 0, game.gameForm.Width, game.gameForm.Height));
+                        grafx.Graphics.ResetTransform();
+                        grafx.Graphics.ScaleTransform(game.gameForm.Width / view.width, game.gameForm.Height / view.height);
+                        game.gameForm.Refresh();
+                    //}
+                    //resizing = false;
+                //}
+                Console.WriteLine("Resized!" + game.gameForm.Width / view.width+" "+ game.gameForm.Height / view.height);
             }
 
-            public void DrawFrame() //Здесь будет происходить отрисовка кадра
-            {                      // По хорошему здесь просто пихаем изображение из буфера на канвас. А само изображение буфера генерируется ранее
-                //Console.WriteLine("s");
-                if ( game.gameLogic.i%10 < 5)
-                formGraphics.Clear(Color.Orange);
-                else
-                formGraphics.Clear(Color.Black);
-                formGraphics.DrawString(Convert.ToString(game.gameLogic.i), font, drawBrush, new Point(0, 0));
-                formGraphics.DrawImage(newImage, new Point(Convert.ToInt32(30+25*Math.Sin(game.gameLogic.i/30.0)), 30));
-                //formGraphics.Render(game.gameForm.);
+            public void DrawFrame() //Вывод из бфра в кадр
+            {
+                if (watch.ElapsedMilliseconds > 1000)
+                {
+                    fps = (game.gameLogic.i - last);
+                    last = game.gameLogic.i;
+                    watch.Restart();
+                }
+                DrawToBuffer();
+               // Render();
+
+                game.gameForm.Invoke(RenderFunction);
             }
+            public void DrawToBuffer() //Здесь будет происходить отрисовка кадра в буффере
+            {
+                //Console.WriteLine("s");
+                //if ( game.gameLogic.i%10 < 5)
+                // grafx.Graphics.Clear(Color.Orange);
+                int drawNum = 0;
+                /*lock (this)
+                {
+                    if (resizing)
+                    {
+                        return;
+                    }
+                    lock (grafx)
+                    {*/
+                grafx.Graphics.FillRectangle(Brushes.Green, 0, 0,view.width, view.height);
+                        game.gameLogic.objects.ForEach(delegate(DrawableObject obj)
+                        {
+                            if ((obj.x + obj.image.Width * 2 > view.x) && (obj.x < view.x + view.width) && (obj.y + obj.image.Height * 2 > view.y) && (obj.y < view.y + view.height))
+                            {
+                                // Bitmap result = new Bitmap(obj.image.Width*2, obj.image.Height*2);
+                                //Graphics g = Graphics.FromImage(result);
+                                //g.TranslateTransform((float)obj.image.Width, (float)obj.image.Height);
+                                //g.RotateTransform(45);
+                                //g.TranslateTransform(-(float)obj.image.Width, -(float)obj.image.Height);
+
+                                //g.DrawImage(obj.image,0,0);
+                                //grafx.Graphics.DrawImage(result, obj.x - view.x, obj.y - view.y);
+                                //grafx.Graphics.DrawImage(obj.image, obj.x - view.x, obj.y - view.y);
+                                grafx.Graphics.FillRectangle(Brushes.Azure, obj.x - view.x, obj.y - view.y, obj.image.Width, obj.image.Height);
+                                //Bitmap img = new Bitmap(obj.image);
+                                drawNum++;
+                            }
+                        });
+                        grafx.Graphics.DrawString(Convert.ToString(fps), font, Brushes.Red, new Point(0, 0));
+                        grafx.Graphics.DrawString(Convert.ToString(drawNum), font, Brushes.Red, new Point(0, 30));
+                    }
+               // }
+            //}
 
 
         }
