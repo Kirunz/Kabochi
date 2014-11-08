@@ -18,7 +18,8 @@ namespace Kabochi.Core
             game = game_m;
             defaultWidth= this.Width = 800;
             defaultHeight= this.Height = 600;
-            
+            FormBorderStyle = FormBorderStyle.None;
+            WindowState = FormWindowState.Maximized;
             this.StartPosition = FormStartPosition.CenterScreen;
             EnableDoubleBuffer();
             Console.WriteLine("Window is created");

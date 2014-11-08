@@ -29,13 +29,22 @@ namespace Kabochi
 
             void gameForm_MouseUp(object sender, MouseEventArgs e)
             {
-                middleButtonIsPressed = false;
+                if (e.Button == MouseButtons.Middle)
+                { 
+                    middleButtonIsPressed = false;
+                }
+                //middleButtonIsPressed = (!(e.Button == MouseButtons.Middle) || middleButtonIsPressed);
             }
 
             void gameForm_MouseDown(object sender, MouseEventArgs e)
             {
-                oldPosition = Cursor.Position;
-                middleButtonIsPressed = true;
+                
+                if (e.Button == MouseButtons.Middle)
+                {
+                    middleButtonIsPressed = true;
+                    oldPosition = Cursor.Position;
+                }
+                    
             }
 
             public void gameForm_MouseMove(object sender, MouseEventArgs e)
@@ -114,7 +123,7 @@ namespace Kabochi
 
             public void gameForm_MouseClick(object sender, MouseEventArgs e)
             {
-                if (e.Button == MouseButtons.Right)
+                if (e.Button == MouseButtons.Right && !middleButtonIsPressed)
                 {
                     game.drawManager.view.targetx = game.drawManager.view.x + e.X -game.gameForm.Width / 2;
                     game.drawManager.view.targety = game.drawManager.view.y + e.Y - game.gameForm.Height / 2;
