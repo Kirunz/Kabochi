@@ -13,18 +13,44 @@ namespace Kabochi
         class InputManager
         {
             public Game game;
+            public Point oldPosition = Cursor.Position;
+            bool middleButtonIsPressed = false;
             public InputManager(Game game_m)
             {
+                oldPosition = Cursor.Position;
                 game = game_m;
                 game.gameForm.MouseClick += gameForm_MouseClick; //Слушаем клики мышью
+                game.gameForm.MouseDown += gameForm_MouseDown;
+                game.gameForm.MouseUp += gameForm_MouseUp;
                 game.gameForm.KeyDown += gameForm_KeyDown;
                 game.gameForm.MouseMove += gameForm_MouseMove;
                 Console.WriteLine("Input module is loaded");
             }
 
+            void gameForm_MouseUp(object sender, MouseEventArgs e)
+            {
+                middleButtonIsPressed = false;
+            }
+
+            void gameForm_MouseDown(object sender, MouseEventArgs e)
+            {
+                oldPosition = Cursor.Position;
+                middleButtonIsPressed = true;
+            }
+
             public void gameForm_MouseMove(object sender, MouseEventArgs e)
             {
                 //throw new NotImplementedException();
+                if (middleButtonIsPressed)
+                { 
+                game.drawManager.view.x -= Cursor.Position.X - oldPosition.X;
+                game.drawManager.view.y -= Cursor.Position.Y - oldPosition.Y;
+                game.drawManager.view.targetx = game.drawManager.view.x;
+                game.drawManager.view.targety = game.drawManager.view.y;
+                //System.Windows.Point;
+                //Cursor.Position = oldPosition;
+                oldPosition = Cursor.Position;
+                }
             }
 
             public void gameForm_KeyDown(object sender, KeyEventArgs e)
@@ -88,7 +114,7 @@ namespace Kabochi
 
             public void gameForm_MouseClick(object sender, MouseEventArgs e)
             {
-                if (e.Button == MouseButtons.Middle)
+                if (e.Button == MouseButtons.Right)
                 {
                     game.drawManager.view.targetx = game.drawManager.view.x + e.X -game.gameForm.Width / 2;
                     game.drawManager.view.targety = game.drawManager.view.y + e.Y - game.gameForm.Height / 2;

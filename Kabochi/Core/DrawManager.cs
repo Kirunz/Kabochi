@@ -127,10 +127,10 @@ namespace Kabochi
                     }
                     lock (grafx)
                     {*/
-                grafx.Graphics.FillRectangle(Brushes.Green, 0, 0,view.width, view.height);
+                grafx.Graphics.FillRectangle(Brushes.Black, 0, 0,view.width, view.height);
                         game.gameLogic.objects.ForEach(delegate(DrawableObject obj)
                         {
-                            if ((obj.x + obj.image.Width * 2 > view.x) && (obj.x < view.x + view.width) && (obj.y + obj.image.Height * 2 > view.y) && (obj.y < view.y + view.height))
+                            if ((obj.position.X + obj.image.Width * 2 > view.x) && (obj.position.X < view.x + view.width) && (obj.position.Y + obj.image.Height * 2 > view.y) && (obj.position.Y < view.y + view.height))
                             {
                                 // Bitmap result = new Bitmap(obj.image.Width*2, obj.image.Height*2);
                                 //Graphics g = Graphics.FromImage(result);
@@ -141,7 +141,7 @@ namespace Kabochi
                                 //g.DrawImage(obj.image,0,0);
                                 //grafx.Graphics.DrawImage(result, obj.x - view.x, obj.y - view.y);
                                 //grafx.Graphics.DrawImage(obj.image, obj.x - view.x, obj.y - view.y);
-                                grafx.Graphics.FillRectangle(Brushes.Azure, obj.x - view.x, obj.y - view.y, obj.image.Width, obj.image.Height);
+                                grafx.Graphics.FillRectangle(Brushes.Azure, (float)(obj.position.X - view.x), (float)(obj.position.Y - view.y), obj.image.Width, obj.image.Height);
                                 //Bitmap img = new Bitmap(obj.image);
                                 drawNum++;
                             }

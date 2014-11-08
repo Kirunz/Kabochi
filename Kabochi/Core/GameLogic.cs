@@ -35,11 +35,12 @@ namespace Kabochi.Core
             game.drawManager.view.moveA();
             objects.ForEach(delegate(DrawableObject obj)
             {
-                obj.MoveDirection();
+                obj.MoveVector();
                if (random.NextDouble() < 0.01)
                {
-                   obj.angle = (float)random.NextDouble() * 360;
-                   obj.speed = (float)0.2 + (float)random.NextDouble() * 3;
+                   //obj.vector=System.Windows.Vector.Add(obj.vector, System.Windows.)
+                   obj.angle = 230+(float)random.NextDouble() * 80;
+                   obj.speed = (float)0.1 + (float)random.NextDouble() * 1;
                   //obj.moveTo((float)random.NextDouble() * (stageWidth - obj.image.Width), (float)random.NextDouble() * (stageHeight - obj.image.Height));
                }
             });

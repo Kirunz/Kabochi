@@ -31,7 +31,7 @@ namespace Kabochi
                 //System.Threading.TimerCallback tcb = this.GameFlow; //Инициализация и запуск таймера
                 MediaPlayer player = new MediaPlayer();
                 player.Open(new Uri(@"Haddaway-What is love.mp3", UriKind.Relative));
-                player.Play();
+                //player.Play();
                 init = true;
                 Application.Run(gameForm);
                 Console.WriteLine("Closing");
