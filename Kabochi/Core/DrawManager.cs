@@ -24,26 +24,13 @@ namespace Kabochi
             Stopwatch watch;
             double fps;
             int last;
-            bool stillDrawing;
-            bool resizing;
 
             Graphics g;
   
             Bitmap newImage;
             void Render()
             {
-                // рисовать из двойного буфера
-                //grafx.Render(Graphics.FromHwnd(game.gameForm.Handle));
-                //lock (this)
-                //{
-                    //if (stillDrawing) return;
-                    //stillDrawing = true;
-                    //lock (grafx)
-                    //{
                         grafx.Render(Graphics.FromHwnd(game.gameForm.Handle));
-                    //}
-                    stillDrawing = false;
-                //}
             }
             public DrawManager(Game game_m)
             {
@@ -64,7 +51,6 @@ namespace Kabochi
                 context.MaximumBuffer = new Size((int)view.width + 1, (int)view.height + 1);
                 
                 grafx = context.Allocate(formGraphics, new Rectangle(0, 0, game.gameForm.Width, game.gameForm.Height));
-                //grafx.Graphics.ScaleTransform(1, 1);
                 drawBrush = new SolidBrush(Color.Black);
                 font = new System.Drawing.Font("Arial", 16);
                 watch = new Stopwatch();
@@ -75,16 +61,6 @@ namespace Kabochi
 
             void gameForm_Resize(object sender, EventArgs e)
             {
-                //grafx = context.Allocate(formGraphics, new Rectangle(0, 0, game.gameForm.Width, game.gameForm.Height));
-                //grafx.Graphics.ScaleTransform(game.gameForm.Width / game.gameForm.defaultWidth, game.gameForm.Height / game.gameForm.defaultHeight);
-                
-                //formGraphics.ScaleTransform(1.1f, 1.1f);
-                //grafx = context.Allocate(formGraphics, new Rectangle(0, 0, game.gameForm.Width, game.gameForm.Height));
-                /*lock (this)
-                {
-                    resizing = true;
-                    lock (grafx)
-                    {*/
                         if (grafx != null)
                         {
                             grafx.Dispose();
@@ -94,9 +70,6 @@ namespace Kabochi
                         grafx.Graphics.ResetTransform();
                         grafx.Graphics.ScaleTransform(game.gameForm.Width / view.width, game.gameForm.Height / view.height);
                         game.gameForm.Refresh();
-                    //}
-                    //resizing = false;
-                //}
                 Console.WriteLine("Resized!" + game.gameForm.Width / view.width+" "+ game.gameForm.Height / view.height);
             }
 
@@ -119,6 +92,8 @@ namespace Kabochi
                 //if ( game.gameLogic.i%10 < 5)
                 // grafx.Graphics.Clear(Color.Orange);
                 int drawNum = 0;
+
+
                 /*lock (this)
                 {
                     if (resizing)
@@ -130,24 +105,15 @@ namespace Kabochi
                 grafx.Graphics.FillRectangle(Brushes.Black, 0, 0,view.width, view.height);
                         game.gameLogic.objects.ForEach(delegate(DrawableObject obj)
                         {
-                            if ((obj.position.X + obj.image.Width * 2 > view.x) && (obj.position.X < view.x + view.width) && (obj.position.Y + obj.image.Height * 2 > view.y) && (obj.position.Y < view.y + view.height))
+                            if ((obj.position.X + obj.width * 2 > view.x) && (obj.position.X < view.x + view.width) && (obj.position.Y + obj.height * 2 > view.y) && (obj.position.Y < view.y + view.height))
                             {
-                                // Bitmap result = new Bitmap(obj.image.Width*2, obj.image.Height*2);
-                                //Graphics g = Graphics.FromImage(result);
-                                //g.TranslateTransform((float)obj.image.Width, (float)obj.image.Height);
-                                //g.RotateTransform(45);
-                                //g.TranslateTransform(-(float)obj.image.Width, -(float)obj.image.Height);
-
-                                //g.DrawImage(obj.image,0,0);
-                                //grafx.Graphics.DrawImage(result, obj.x - view.x, obj.y - view.y);
-                                //grafx.Graphics.DrawImage(obj.image, obj.x - view.x, obj.y - view.y);
-                                grafx.Graphics.FillRectangle(Brushes.Azure, (float)(obj.position.X - view.x), (float)(obj.position.Y - view.y), obj.image.Width, obj.image.Height);
-                                //Bitmap img = new Bitmap(obj.image);
+                                obj.Draw(grafx, view.x, view.y);
                                 drawNum++;
                             }
                         });
                         grafx.Graphics.DrawString(Convert.ToString(fps), font, Brushes.Red, new Point(0, 0));
                         grafx.Graphics.DrawString(Convert.ToString(drawNum), font, Brushes.Red, new Point(0, 30));
+                        grafx.Graphics.DrawLine(new Pen(Color.White,64.0f), new Point((int)-view.x, game.gameLogic.stageHeight - (int)view.y), new Point(game.gameLogic.stageWidth - (int)view.x, game.gameLogic.stageHeight - (int)view.y));
                     }
                // }
             //}

@@ -11,7 +11,9 @@ namespace Kabochi
     class DrawableObject
     {
         //public Bitmap image;
-        private float scale, _angle, _speed;
+        protected float _angle, _speed;
+        public int depth;
+        public float width, height;
         public System.Windows.Point position;
         public float angle
         {
@@ -39,28 +41,21 @@ namespace Kabochi
 
             }
         }
-        public PseudoImage image;
         public Vector vector;
-        public class PseudoImage{
-            public float Width, Height;
-        }
 
+        public DrawableObject()
+        {
+
+        }
         public DrawableObject(string imagePass, float x_m, float y_m, float scale_m)
         {
-            //Image promtImage = Image.FromFile(imagePass);
-            //image = promtImage;
-            //image = new Bitmap(promtImage, new Size((int)(promtImage.Width*scale_m),(int)(promtImage.Height*scale_m)));
-            image = new PseudoImage();
-            _angle = 270;
-            _speed = 1.2f;
+            depth = 0;
             CalculateVector();
             position = new System.Windows.Point(x_m, y_m);
-            scale = scale_m;
-            image.Width = image.Height = 5 * scale_m;
-            //Console.WriteLine("Created at [" + x + "; " + y + "] with size "+image.Width+"*"+image.Height);
+            width = height = scale_m;
         }
 
-        private void CalculateVector()
+        protected void CalculateVector()
         {
             vector = Vector.Multiply(new Vector(Math.Cos(angle * Math.PI / 180), -Math.Sin(angle * Math.PI / 180)), speed);
         }
@@ -72,5 +67,7 @@ namespace Kabochi
         {
             position = Vector.Add(vector, position);
         }
+
+        virtual public void Draw(BufferedGraphics grafx, float viewX, float viewY){}
     }
 }

@@ -67,6 +67,9 @@ namespace Kabochi
                 Console.WriteLine(e.KeyData);
                 switch (e.KeyData)
                 {
+                    case Keys.Escape:
+                        Application.Exit();
+                        break;
                     case Keys.A:
                         lock (game.drawManager.grafx)
                         {
@@ -123,11 +126,27 @@ namespace Kabochi
 
             public void gameForm_MouseClick(object sender, MouseEventArgs e)
             {
-                if (e.Button == MouseButtons.Right && !middleButtonIsPressed)
+                if (e.Button==MouseButtons.Left)
                 {
-                    game.drawManager.view.targetx = game.drawManager.view.x + e.X -game.gameForm.Width / 2;
-                    game.drawManager.view.targety = game.drawManager.view.y + e.Y - game.gameForm.Height / 2;
-                    Console.WriteLine("View is on " + game.drawManager.view.x + " " + game.drawManager.view.y);
+                    SnowFlake a = new SnowFlake(game.drawManager.view.x + e.X, game.drawManager.view.y + e.Y , (float)(5+game.gameLogic.random.NextDouble()*12));
+                    a.brush = Brushes.Green;
+                    a.depth = 10;
+                    game.gameLogic.objects.Add(a);
+                    game.gameLogic.objectsUpdated = true;
+                }
+                //if (e.Button == MouseButtons.Right && !middleButtonIsPressed)
+                //{
+                //    game.drawManager.view.targetx = game.drawManager.view.x + e.X -game.gameForm.Width / 2;
+                //    game.drawManager.view.targety = game.drawManager.view.y + e.Y - game.gameForm.Height / 2;
+                //    Console.WriteLine("View is on " + game.drawManager.view.x + " " + game.drawManager.view.y);
+                //}
+                if (e.Button == MouseButtons.Right)
+                {
+                    SnowFlake a = new SnowFlake(game.drawManager.view.x + e.X, game.drawManager.view.y + e.Y, (float)(5 + game.gameLogic.random.NextDouble() * 12));
+                    a.brush = Brushes.Red;
+                    a.depth = -10;
+                    game.gameLogic.objects.Add(a);
+                    game.gameLogic.objectsUpdated = true;
                 }
                 Console.WriteLine(e.Button+" click on "+e.X+" "+e.Y);
             }

@@ -41,8 +41,10 @@ namespace Kabochi
             {                   
                 // Запускает методы отрисовки и обновления состояния игры
                 if (!init) return;
-                drawManager.DrawFrame();
+                //Visual a = new Visual();
                 gameLogic.GameStep();
+                drawManager.DrawFrame();
+                
             }
 
         }

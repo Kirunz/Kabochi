@@ -22,10 +22,6 @@ namespace Kabochi.Core
         {
             float difx=targetx-x, dify=targety-y;
             float distance = (float)Math.Sqrt(Math.Pow(difx, 2) + Math.Pow(dify, 2));
-            if (Math.Abs(difx)>5)
-            {
-                
-            }
         }
         public void moveA()
         {
