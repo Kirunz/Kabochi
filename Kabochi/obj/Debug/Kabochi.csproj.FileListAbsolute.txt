@@ -34,3 +34,9 @@ E:\Загрузки\mineeeee\Kabochi-master\Kabochi\obj\Debug\Kabochi.pdb
 E:\Загрузки\mineeeee\Kabochi-master\Kabochi\bin\Debug\Kabochi.exe
 E:\Загрузки\mineeeee\Kabochi-master\Kabochi\bin\Debug\Kabochi.pdb
 E:\Загрузки\mineeeee\Kabochi-master\Kabochi\obj\Debug\Kabochi.csprojResolveAssemblyReference.cache
+D:\Users\TEMP\Documents\Kabochi-master\Kabochi\bin\Debug\Kabochi.exe.config
+D:\Users\TEMP\Documents\Kabochi-master\Kabochi\obj\Debug\Kabochi.exe
+D:\Users\TEMP\Documents\Kabochi-master\Kabochi\obj\Debug\Kabochi.pdb
+D:\Users\TEMP\Documents\Kabochi-master\Kabochi\bin\Debug\Kabochi.exe
+D:\Users\TEMP\Documents\Kabochi-master\Kabochi\bin\Debug\Kabochi.pdb
+D:\Users\TEMP\Documents\Kabochi-master\Kabochi\obj\Debug\Kabochi.csprojResolveAssemblyReference.cache

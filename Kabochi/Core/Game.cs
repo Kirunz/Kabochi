@@ -16,6 +16,7 @@ namespace Kabochi
             public InputManager inputManager;//Менеджер мыши\клавы
             public DrawManager drawManager;//Менеджер отрисовки
             public GameLogic gameLogic; //Вся обработка игровой логики
+            public ObjectManager objectManager; //Создание\хранение\обработка списков игровых объектов и отрисовываемых объектов
             public System.Windows.Forms.Timer timer; //внутриигровой таймер
             bool init;
 
@@ -25,12 +26,14 @@ namespace Kabochi
 
 
                 inputManager = new InputManager(this);
+                objectManager = new ObjectManager(this);
                 drawManager = new DrawManager(this);
                 gameLogic = new GameLogic(this);
+                
 
                 //System.Threading.TimerCallback tcb = this.GameFlow; //Инициализация и запуск таймера
-                MediaPlayer player = new MediaPlayer();
-                player.Open(new Uri(@"Haddaway-What is love.mp3", UriKind.Relative));
+                //MediaPlayer player = new MediaPlayer();
+                //player.Open(new Uri(@"Haddaway-What is love.mp3", UriKind.Relative));
                 //player.Play();
                 init = true;
                 Application.Run(gameForm);

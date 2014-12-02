@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
-using System.Threading;
+//using System.Threading;
 using System.Diagnostics;
 
 namespace Kabochi
@@ -15,8 +15,6 @@ namespace Kabochi
             public Game game;
             Font font;
             SolidBrush drawBrush;
-            delegate void RenderFunc();
-            RenderFunc RenderFunction;
             Graphics formGraphics;
             public BufferedGraphics grafx;
             BufferedGraphicsContext context;
@@ -25,27 +23,16 @@ namespace Kabochi
             double fps;
             int last;
 
-            Graphics g;
-  
-            Bitmap newImage;
-            void Render()
-            {
-                        grafx.Render(Graphics.FromHwnd(game.gameForm.Handle));
-            }
+
             public DrawManager(Game game_m)
             {
                 game = game_m;
-                newImage = new Bitmap(320, 240);
-                g = Graphics.FromImage(newImage);
-                RenderFunction = new RenderFunc(Render);
                 formGraphics = game.gameForm.CreateGraphics();
                 game.gameForm.Resize += gameForm_Resize;
                 
                 Console.WriteLine(formGraphics.DpiX+"   "+formGraphics.DpiY);
 
                 view = new View(20, 20, 1920, 1080);
-                // Retrieves the BufferedGraphicsContext for the 
-                // current application domain.
                 context = BufferedGraphicsManager.Current;
 
                 context.MaximumBuffer = new Size((int)view.width + 1, (int)view.height + 1);
@@ -73,7 +60,7 @@ namespace Kabochi
                 Console.WriteLine("Resized!" + game.gameForm.Width / view.width+" "+ game.gameForm.Height / view.height);
             }
 
-            public void DrawFrame() //Вывод из бфра в кадр
+            public void DrawFrame() //Вывод из буфера в кадр
             {
                 if (watch.ElapsedMilliseconds > 1000)
                 {
@@ -82,43 +69,33 @@ namespace Kabochi
                     watch.Restart();
                 }
                 DrawToBuffer();
-               // Render();
+                grafx.Render();
+                if (game.objectManager.needSomeSort)
+                    game.objectManager.sortDrawable();
 
-                game.gameForm.Invoke(RenderFunction);
             }
-            public void DrawToBuffer() //Здесь будет происходить отрисовка кадра в буффере
+            public void DrawToBuffer() //Здесь будет происходить отрисовка кадра в буфер
             {
-                //Console.WriteLine("s");
-                //if ( game.gameLogic.i%10 < 5)
-                // grafx.Graphics.Clear(Color.Orange);
                 int drawNum = 0;
 
-
-                /*lock (this)
-                {
-                    if (resizing)
-                    {
-                        return;
-                    }
-                    lock (grafx)
-                    {*/
+                if (System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.Z) == true)
+                //if (System.Windows.Input.Keyboard.GetKeyStates(System.Windows.Input.Key.Space)>0) //Отлично, для этого он просит запилить потоки и прочую чешую. Разобраться
+                    grafx.Graphics.FillRectangle(Brushes.Red, 0, 0, view.width, view.height);
+                else
                 grafx.Graphics.FillRectangle(Brushes.Black, 0, 0,view.width, view.height);
-                        game.gameLogic.objects.ForEach(delegate(DrawableObject obj)
+
+                        foreach(DrawableObject obj in game.objectManager.drawObjects)
                         {
-                            if ((obj.position.X + obj.width * 2 > view.x) && (obj.position.X < view.x + view.width) && (obj.position.Y + obj.height * 2 > view.y) && (obj.position.Y < view.y + view.height))
-                            {
-                                obj.Draw(grafx, view.x, view.y);
-                                drawNum++;
-                            }
-                        });
+                                if ((obj.position.X + obj.width > view.x) && (obj.position.X < view.x + view.width) && (obj.position.Y + obj.height * 2 > view.y) && (obj.position.Y < view.y + view.height))
+                                {
+                                    obj.Draw(grafx, (float)(obj.position.X - view.x), (float)(obj.position.Y - view.y));
+                                    drawNum++;
+                                }
+                        };
                         grafx.Graphics.DrawString(Convert.ToString(fps), font, Brushes.Red, new Point(0, 0));
                         grafx.Graphics.DrawString(Convert.ToString(drawNum), font, Brushes.Red, new Point(0, 30));
                         grafx.Graphics.DrawLine(new Pen(Color.White,64.0f), new Point((int)-view.x, game.gameLogic.stageHeight - (int)view.y), new Point(game.gameLogic.stageWidth - (int)view.x, game.gameLogic.stageHeight - (int)view.y));
                     }
-               // }
-            //}
-
-
         }
     }
 }

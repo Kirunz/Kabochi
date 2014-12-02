@@ -8,10 +8,11 @@ using System.Windows;
 
 namespace Kabochi
 {
-    class DrawableObject
+    class DrawableObject : GameObject
     {
         //public Bitmap image;
         protected float _angle, _speed;
+
         public int depth;
         public float width, height;
         public System.Windows.Point position;
@@ -49,6 +50,7 @@ namespace Kabochi
         }
         public DrawableObject(string imagePass, float x_m, float y_m, float scale_m)
         {
+            drawable = true;
             depth = 0;
             CalculateVector();
             position = new System.Windows.Point(x_m, y_m);
@@ -68,6 +70,6 @@ namespace Kabochi
             position = Vector.Add(vector, position);
         }
 
-        virtual public void Draw(BufferedGraphics grafx, float viewX, float viewY){}
+        virtual public void Draw(BufferedGraphics grafx, float x, float y){}
     }
 }

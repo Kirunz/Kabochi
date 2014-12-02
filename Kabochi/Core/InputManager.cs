@@ -27,8 +27,11 @@ namespace Kabochi
                 Console.WriteLine("Input module is loaded");
             }
 
+
             void gameForm_MouseUp(object sender, MouseEventArgs e)
             {
+             
+                
                 if (e.Button == MouseButtons.Middle)
                 { 
                     middleButtonIsPressed = false;
@@ -124,15 +127,22 @@ namespace Kabochi
                 //throw new NotImplementedException();
             }
 
+            public void gameStep()
+            {
+                if (System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.Z) == true)
+                {
+                    float size = (float)(5 + game.gameLogic.random.NextDouble() * 12);
+                    game.objectManager.addSnowFlake(game.drawManager.view.x + Cursor.Position.X - (float)(size *2.5), game.drawManager.view.y + Cursor.Position.Y - (float)(size *2.5), size);
+                }
+            }
             public void gameForm_MouseClick(object sender, MouseEventArgs e)
             {
                 if (e.Button==MouseButtons.Left)
                 {
-                    SnowFlake a = new SnowFlake(game.drawManager.view.x + e.X, game.drawManager.view.y + e.Y , (float)(5+game.gameLogic.random.NextDouble()*12));
+                    SnowFlake a = game.objectManager.addSnowFlake(game.drawManager.view.x + e.X, game.drawManager.view.y + e.Y , (float)(5+game.gameLogic.random.NextDouble()*12));
                     a.brush = Brushes.Green;
                     a.depth = 10;
-                    game.gameLogic.objects.Add(a);
-                    game.gameLogic.objectsUpdated = true;
+                    //game.gameLogic.objects.Add(a);
                 }
                 //if (e.Button == MouseButtons.Right && !middleButtonIsPressed)
                 //{
@@ -142,11 +152,10 @@ namespace Kabochi
                 //}
                 if (e.Button == MouseButtons.Right)
                 {
-                    SnowFlake a = new SnowFlake(game.drawManager.view.x + e.X, game.drawManager.view.y + e.Y, (float)(5 + game.gameLogic.random.NextDouble() * 12));
+                    SnowFlake a = game.objectManager.addSnowFlake(game.drawManager.view.x + e.X, game.drawManager.view.y + e.Y, (float)(5 + game.gameLogic.random.NextDouble() * 12));
                     a.brush = Brushes.Red;
                     a.depth = -10;
-                    game.gameLogic.objects.Add(a);
-                    game.gameLogic.objectsUpdated = true;
+                    //game.gameLogic.objects.Add(a);
                 }
                 Console.WriteLine(e.Button+" click on "+e.X+" "+e.Y);
             }

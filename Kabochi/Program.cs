@@ -11,8 +11,11 @@ namespace Kabochi
 {
     class Program
     {
+        [STAThread] //Такой типа (?) потока нужен для работы Input.Keyboard как минимум
         static void Main(string[] args)
         {
+            //if (System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.LeftShift) == true)
+            //    MessageBox.Show("Got it!");
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Processing...");
             Core.Game game = new Core.Game();
