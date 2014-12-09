@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using System.Collections;
+using System.Globalization;
 //using System.Threading;
 using System.Diagnostics;
 
@@ -77,25 +79,43 @@ namespace Kabochi
             public void DrawToBuffer() //Здесь будет происходить отрисовка кадра в буфер
             {
                 int drawNum = 0;
-
+                //List<DrawableObject> list = new List<DrawableObject>();
+                SortedList<int, DrawableObject> list= new SortedList<int, DrawableObject>();
                 if (System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.Z) == true)
                 //if (System.Windows.Input.Keyboard.GetKeyStates(System.Windows.Input.Key.Space)>0) //Отлично, для этого он просит запилить потоки и прочую чешую. Разобраться
-                    grafx.Graphics.FillRectangle(Brushes.Red, 0, 0, view.width, view.height);
+                    grafx.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(255, 128, 0, 0)), 0, 0, view.width, view.height);
                 else
-                grafx.Graphics.FillRectangle(Brushes.Black, 0, 0,view.width, view.height);
+                    grafx.Graphics.FillRectangle(Brushes.Black, 0, 0,view.width, view.height);
 
                         foreach(DrawableObject obj in game.objectManager.drawObjects)
                         {
                                 if ((obj.position.X + obj.width > view.x) && (obj.position.X < view.x + view.width) && (obj.position.Y + obj.height * 2 > view.y) && (obj.position.Y < view.y + view.height))
                                 {
+                                    //list.Add(obj.depth, obj);
                                     obj.Draw(grafx, (float)(obj.position.X - view.x), (float)(obj.position.Y - view.y));
                                     drawNum++;
                                 }
                         };
+                        /*list.Sort(delegate(DrawableObject x, DrawableObject y)
+                        {
+                            if (x.depth == y.depth) return 0;
+                            else if (x.depth > y.depth) return -1;
+                            else return 1;
+                        });*/
+                        for (int i = 0; i < list.Count; i++)
+                        {
+                            DrawableObject obj = list.ElementAt(i).Value;
+                            obj.Draw(grafx, (float)(obj.position.X - view.x), (float)(obj.position.Y - view.y));
+                        }
+                       // foreach (DrawableObject obj in list)
+                      //  {
+                       //     obj.Draw(grafx, (float)(obj.position.X - view.x), (float)(obj.position.Y - view.y));
+                       // }
+
                         grafx.Graphics.DrawString(Convert.ToString(fps), font, Brushes.Red, new Point(0, 0));
                         grafx.Graphics.DrawString(Convert.ToString(drawNum), font, Brushes.Red, new Point(0, 30));
                         grafx.Graphics.DrawLine(new Pen(Color.White,64.0f), new Point((int)-view.x, game.gameLogic.stageHeight - (int)view.y), new Point(game.gameLogic.stageWidth - (int)view.x, game.gameLogic.stageHeight - (int)view.y));
-                    }
+             }
         }
     }
 }

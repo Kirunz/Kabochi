@@ -14,6 +14,8 @@ namespace Kabochi.Core
         public IList<GameObject> objects;
         public int stageWidth;
         public int stageHeight;
+        public Hero hero;
+        //public List<DrawableObject> collidable;
         public GameLogic(Game game_m)
         {
             game = game_m;
@@ -25,13 +27,15 @@ namespace Kabochi.Core
             {
                 game.objectManager.addSnowFlake((float)(random.NextDouble() * stageWidth), (float)(random.NextDouble() * stageHeight), (float)(0.7+random.NextDouble()*2));
             }
+            hero = game.objectManager.addHero(300f, 400f, 5);
             
         }
 
         public void GameStep()
         {
             game.inputManager.gameStep();
-            
+            game.drawManager.view.x = (float)hero.position.X - game.gameForm.Width / 2;
+            game.drawManager.view.y = (float)hero.position.Y - game.gameForm.Height / 2;
                // SnowFlake a = game.objectManager.addSnowFlake(game.drawManager.view.x + , game.drawManager.view.y + e.Y , (float)(5+game.gameLogic.random.NextDouble()*12));
             //objects.Sort(delegate(GameObject x, GameObject y)
              //   {   
@@ -55,6 +59,21 @@ namespace Kabochi.Core
             game.drawManager.view.moveA();
             foreach (GameObject obj in objects)
             {
+                if (obj != hero)
+                { if(hero.CollidesWith((DrawableObject)obj))
+                    {
+                        SnowFlake a = (SnowFlake)obj;
+                        a.brush = System.Drawing.Brushes.Red;
+                    } 
+                    else
+                    {
+                        SnowFlake a = (SnowFlake)obj;
+                        if (System.Windows.Point.Subtract(a.position,hero.position).Length>300)
+                            a.brush = System.Drawing.Brushes.Azure;
+                        else
+                            a.brush = System.Drawing.Brushes.Pink;
+                    } 
+                }
                 obj.Update(this);
             }
         }

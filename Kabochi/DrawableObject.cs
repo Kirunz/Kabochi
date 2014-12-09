@@ -57,6 +57,16 @@ namespace Kabochi
             width = height = scale_m;
         }
 
+        public bool CollidesWith(DrawableObject b)
+        {
+            return  (   Math.Abs(this.position.X-b.position.X)<(this.width/2+b.width/2) ||
+                        Math.Abs(this.position.Y - b.position.Y) < (this.height / 2 + b.height / 2)); //correct collision with && is boooring
+                
+                //!(this.position.Y < (b.position.Y + b.height) ||
+                //    (this.position.Y + this.height) > b.position.Y ||
+                //    (this.position.X + this.width) < b.position.X ||
+                //    this.position.X > (b.position.X + b.width));
+        }
         protected void CalculateVector()
         {
             vector = Vector.Multiply(new Vector(Math.Cos(angle * Math.PI / 180), -Math.Sin(angle * Math.PI / 180)), speed);

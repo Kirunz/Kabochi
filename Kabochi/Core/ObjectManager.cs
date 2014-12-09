@@ -9,6 +9,7 @@ namespace Kabochi.Core
     
     class ObjectManager
     {
+        int i;
         public IList<GameObject> gameObjects
         {
             get
@@ -25,6 +26,7 @@ namespace Kabochi.Core
 
         public ObjectManager(Game game_m)
         {
+            i = 0;
             needSomeSort = false;
             _gameObjects = new List<GameObject>();
             _drawObjects = new List<DrawableObject>();
@@ -32,23 +34,43 @@ namespace Kabochi.Core
         }
 
         public void sortDrawable(){
-            _drawObjects.Sort(delegate(DrawableObject x, DrawableObject y)
-            {   
-                 if (x.depth == y.depth) return 0;
-                 else if (x.depth > y.depth) return -1;
-                 else return 1;
-               });
-            needSomeSort = false;
+           // _drawObjects.Sort(delegate(DrawableObject x, DrawableObject y)
+          //  {
+           //     i++;
+           //      if (x.depth == y.depth) return 0;
+           //      else if (x.depth > y.depth) return -1;
+           //      else return 1;
+           //    });
+             needSomeSort = false;
+            Console.WriteLine(i+" sorting iterations");
+        }
+
+        public void removeObject(GameObject obj)
+        {
+            if (obj.drawable)
+                _drawObjects.Remove((DrawableObject)obj);
+            _gameObjects.Remove(obj);
+        }
+        public void addObject(GameObject obj)
+        {
+            _gameObjects.Add(obj);
+            if (obj.drawable)
+            {
+                _drawObjects.Add((DrawableObject)obj);
+                //_drawObjects.AddBinary(obj);
+                //needSomeSort = true;
+            }
+         }
+        public Hero addHero(float x, float y, float scale)
+        {
+            Hero obj = new Hero(x, y, scale);
+            addObject(obj);
+            return obj;
         }
         public SnowFlake addSnowFlake(float x, float y, float scale)
         {
             SnowFlake obj = new SnowFlake(x, y, scale);
-            _gameObjects.Add(obj);
-            if (obj.drawable)
-            {
-                _drawObjects.Add(obj);
-                needSomeSort = true;
-            }
+            addObject(obj);
             return obj;
         }
     }

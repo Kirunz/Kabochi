@@ -49,7 +49,15 @@ namespace Kabochi
                 }
                     
             }
+            public bool keyIsPressed(string keyString)
+            {
+                return false;
+               // System.Windows.Input.KeyConverter kc = new System.Windows.Input.KeyConverter();
+               // System.Windows.Input.Key a = kc.ConvertFromString(keyString);
+                
+               // return System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.Z);
 
+            }
             public void gameForm_MouseMove(object sender, MouseEventArgs e)
             {
                 //throw new NotImplementedException();
