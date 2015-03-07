@@ -21,6 +21,21 @@ namespace Kabochi.Core
             get { return _drawObjects.AsReadOnly(); }
         }
         private List<DrawableObject> _drawObjects;
+
+        public IList<DrawableObject> movableObjects
+        {
+            get
+            { return _movableObjects.AsReadOnly(); }
+        }
+        private List<DrawableObject> _movableObjects;
+
+        public IList<DrawableObject> solidObjects
+        {
+            get
+            { return _solidObjects.AsReadOnly(); }
+        }
+        private List<DrawableObject> _solidObjects;
+
         public Game game;
         public bool needSomeSort;
 
@@ -30,6 +45,8 @@ namespace Kabochi.Core
             needSomeSort = false;
             _gameObjects = new List<GameObject>();
             _drawObjects = new List<DrawableObject>();
+            _movableObjects = new List<DrawableObject>();
+            _solidObjects = new List<DrawableObject>();
             game = game_m;
         }
 
@@ -49,6 +66,10 @@ namespace Kabochi.Core
         {
             if (obj.drawable)
                 _drawObjects.Remove((DrawableObject)obj);
+            if (obj.movable)
+                _movableObjects.Remove((DrawableObject)obj);
+            if (obj.solid)
+                _solidObjects.Remove((DrawableObject)obj);
             _gameObjects.Remove(obj);
         }
         public void addObject(GameObject obj)
@@ -60,7 +81,24 @@ namespace Kabochi.Core
                 //_drawObjects.AddBinary(obj);
                 //needSomeSort = true;
             }
+            if (obj.movable)
+                _movableObjects.Add((DrawableObject)obj);
+
+            if (obj.solid)
+                _solidObjects.Add((DrawableObject)obj);
          }
+        //Нужно написать фабрику по динамичному добавлению любого объекта
+        //public GameObject addObject(string name, float x, float y, float scale)
+        //{
+         //   Type type = Type.GetType(name);
+        //    Object obj = new type();
+        //}
+        public Wall addWall(float x, float y, float scale)
+        {
+            Wall obj = new Wall(x, y, scale);
+            addObject(obj);
+            return obj;
+        }
         public Hero addHero(float x, float y, float scale)
         {
             Hero obj = new Hero(x, y, scale);
