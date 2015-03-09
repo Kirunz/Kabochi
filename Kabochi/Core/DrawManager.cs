@@ -24,6 +24,8 @@ namespace Kabochi
             Stopwatch watch;
             double fps;
             int last;
+            bool spoiled = false;
+            int curving;
 
 
             public DrawManager(Game game_m)
@@ -71,6 +73,40 @@ namespace Kabochi
                     watch.Restart();
                 }
                 DrawToBuffer();
+                int i = 0;
+                int inc = 0;
+                int spacing = 0;
+                while (i<view.height)
+                {
+                    if (spoiled)
+                    {
+                        inc = (int)(1 + game.gameLogic.random.NextDouble() * 70);
+                        spacing = (int)(game.gameLogic.random.NextDouble() * 10);
+                    }
+                    else
+                    {
+                        inc = (int)(1 + game.gameLogic.random.NextDouble() * 200);
+                        spacing = (int)(game.gameLogic.random.NextDouble() * 70);
+                    }
+                    grafx.Graphics.FillRectangle(new SolidBrush(Color.FromArgb((int)(10+game.gameLogic.random.NextDouble()*20), Color.Red)), 0, i, view.width, inc);
+                    i += inc + spacing;
+                }
+
+                if (!spoiled && game.gameLogic.random.NextDouble() < 0.01)
+                {
+                    spoiled = true;
+                    curving = (int)(game.gameLogic.random.NextDouble() * view.height);
+                    
+                    //inc = (int)(game.gameLogic.random.NextDouble() * view.height);
+                    //grafx.Graphics.CopyFromScreen(0, inc, 0, inc + 70, new Size((int)view.width, 20));
+                }
+                if (spoiled)
+                {
+                    grafx.Graphics.CopyFromScreen(0, curving, 0, (int)(curving + 30 + game.gameLogic.random.NextDouble() * 40), new Size((int)view.width, 70));
+                    if (game.gameLogic.random.NextDouble() < 0.01)
+                        spoiled = false;
+                }
+                //grafx.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(120, Color.White)), 0, 0, view.width, 50);
                 grafx.Render();
                 if (game.objectManager.needSomeSort)
                     game.objectManager.sortDrawable();

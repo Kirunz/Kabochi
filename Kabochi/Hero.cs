@@ -21,7 +21,7 @@ namespace Kabochi
             drawable = true;
             depth = -5;
             //_angle = 270;
-            _speed = 5f;
+            _speed = 4f;
             CalculateVector();
             position = new System.Windows.Point(x_m, y_m);
             previousPosition = position;
@@ -30,7 +30,9 @@ namespace Kabochi
         }
         override public void Draw(BufferedGraphics grafx, float x, float y)
         {
-            grafx.Graphics.FillRectangle (brush, (float)(x - 3 + random.NextDouble() * 6f), (float)(y - 3 + random.NextDouble() * 6f), width, height);
+            //grafx.Graphics.FillRectangle(brush, x, y, width, height);
+            for (int i = 0; i < 120; i++)
+                grafx.Graphics.FillRectangle(brush, (float)(x + random.NextDouble() * width), (float)(y + random.NextDouble() * height), 1, 1);
         }
 
         override public void Update(Core.GameLogic gameLogic)
