@@ -88,6 +88,7 @@ namespace Kabochi
                         inc = (int)(1 + game.gameLogic.random.NextDouble() * 200);
                         spacing = (int)(game.gameLogic.random.NextDouble() * 70);
                     }
+                    
                     grafx.Graphics.FillRectangle(new SolidBrush(Color.FromArgb((int)(10+game.gameLogic.random.NextDouble()*20), Color.Red)), 0, i, view.width, inc);
                     i += inc + spacing;
                 }
@@ -102,7 +103,8 @@ namespace Kabochi
                 }
                 if (spoiled)
                 {
-                    grafx.Graphics.CopyFromScreen(0, curving, 0, (int)(curving + 30 + game.gameLogic.random.NextDouble() * 40), new Size((int)view.width, 70));
+                    //Тормозит однако
+                    //grafx.Graphics.CopyFromScreen((int)(-10+game.gameLogic.random.NextDouble()*20), curving, 0, (int)(curving + 30 + game.gameLogic.random.NextDouble() * 40), new Size((int)view.width, 70));
                     if (game.gameLogic.random.NextDouble() < 0.01)
                         spoiled = false;
                 }

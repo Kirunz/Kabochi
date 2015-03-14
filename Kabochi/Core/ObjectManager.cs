@@ -16,11 +16,11 @@ namespace Kabochi.Core
             {return _gameObjects.AsReadOnly();}
         }
         private List<GameObject> _gameObjects;
-        public IList<DrawableObject> drawObjects
+        public IList<Layer> drawObjects
         {
             get { return _drawObjects.AsReadOnly(); }
         }
-        private List<DrawableObject> _drawObjects;
+        private List<Layer> _drawObjects;
 
         public IList<DrawableObject> movableObjects
         {
@@ -36,6 +36,25 @@ namespace Kabochi.Core
         }
         private List<DrawableObject> _solidObjects;
 
+        struct Layer
+        {
+            public double depth;
+            private int i;
+            private List<DrawableObject> objects;
+            public void Layer()
+            {
+                i = 0;
+            }
+            public DrawableObject getNextObject()
+            {
+                DrawableObject next = objects.ElementAtOrDefault(i);
+                if (next!=null)
+                    i++;
+                else
+                    i = 0;
+                return next;
+            }
+        }
         public Game game;
         public bool needSomeSort;
 
