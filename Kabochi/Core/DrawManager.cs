@@ -104,7 +104,7 @@ namespace Kabochi
                 if (spoiled)
                 {
                     //Тормозит однако
-                    //grafx.Graphics.CopyFromScreen((int)(-10+game.gameLogic.random.NextDouble()*20), curving, 0, (int)(curving + 30 + game.gameLogic.random.NextDouble() * 40), new Size((int)view.width, 70));
+                    grafx.Graphics.CopyFromScreen((int)(-10+game.gameLogic.random.NextDouble()*20), curving, 0, (int)(curving + 30 + game.gameLogic.random.NextDouble() * 40), new Size((int)view.width, 70));
                     if (game.gameLogic.random.NextDouble() < 0.01)
                         spoiled = false;
                 }
@@ -125,14 +125,19 @@ namespace Kabochi
                 else
                     grafx.Graphics.FillRectangle(Brushes.Black, 0, 0,view.width, view.height);
 
-                        foreach(DrawableObject obj in game.objectManager.drawObjects)
+                        foreach(Layer layer in game.objectManager.Layers)
                         {
+                            DrawableObject obj = layer.getNextObject();
+                            while (obj != null)
+                            {
                                 if ((obj.position.X + obj.width > view.x) && (obj.position.X < view.x + view.width) && (obj.position.Y + obj.height * 2 > view.y) && (obj.position.Y < view.y + view.height))
                                 {
                                     //list.Add(obj.depth, obj);
                                     obj.Draw(grafx, (float)(obj.position.X - view.x), (float)(obj.position.Y - view.y));
                                     drawNum++;
                                 }
+                                obj = layer.getNextObject();
+                            }
                         };
                         /*list.Sort(delegate(DrawableObject x, DrawableObject y)
                         {

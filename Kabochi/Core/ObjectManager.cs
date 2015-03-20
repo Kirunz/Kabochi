@@ -16,11 +16,14 @@ namespace Kabochi.Core
             {return _gameObjects.AsReadOnly();}
         }
         private List<GameObject> _gameObjects;
-        public IList<Layer> drawObjects
+
+        private List<Layer> _Layers;
+
+        public IList<Layer> Layers
         {
-            get { return _drawObjects.AsReadOnly(); }
+            get
+            { return _Layers.AsReadOnly(); }
         }
-        private List<Layer> _drawObjects;
 
         public IList<DrawableObject> movableObjects
         {
@@ -36,25 +39,7 @@ namespace Kabochi.Core
         }
         private List<DrawableObject> _solidObjects;
 
-        struct Layer
-        {
-            public double depth;
-            private int i;
-            private List<DrawableObject> objects;
-            public void Layer()
-            {
-                i = 0;
-            }
-            public DrawableObject getNextObject()
-            {
-                DrawableObject next = objects.ElementAtOrDefault(i);
-                if (next!=null)
-                    i++;
-                else
-                    i = 0;
-                return next;
-            }
-        }
+        
         public Game game;
         public bool needSomeSort;
 
@@ -63,7 +48,7 @@ namespace Kabochi.Core
             i = 0;
             needSomeSort = false;
             _gameObjects = new List<GameObject>();
-            _drawObjects = new List<DrawableObject>();
+            _Layers = new List<Layer>();
             _movableObjects = new List<DrawableObject>();
             _solidObjects = new List<DrawableObject>();
             game = game_m;
@@ -84,19 +69,40 @@ namespace Kabochi.Core
         public void removeObject(GameObject obj)
         {
             if (obj.drawable)
-                _drawObjects.Remove((DrawableObject)obj);
+                //_drawObjects.Remove((DrawableObject)obj);
             if (obj.movable)
                 _movableObjects.Remove((DrawableObject)obj);
             if (obj.solid)
                 _solidObjects.Remove((DrawableObject)obj);
             _gameObjects.Remove(obj);
         }
-        public void addObject(GameObject obj)
+        private Layer getLayer(double depth) //Возвращает слой с заданной глубиной. Если таких слоев нет, то создает и возвращает.
+        {
+            Layer a = _Layers.Find(x => x.depth == depth);
+            if (a == null)
+            {
+                if (_Layers.Count() == 0)
+                {
+                    a = new Layer(depth);
+                    _Layers.Add(a);
+                }
+                else
+                {
+                    int i = 0;
+                    while (_Layers.Count()>i && _Layers[i].depth > depth) i++;
+                    a = new Layer(depth);
+                    _Layers.Insert(i, a);
+                }
+            }
+            return a;
+        }
+        public void addObject(GameObject obj, double depth)
         {
             _gameObjects.Add(obj);
             if (obj.drawable)
             {
-                _drawObjects.Add((DrawableObject)obj);
+                getLayer(depth).objects.Add((DrawableObject)obj);
+                //_drawObjects.Add((DrawableObject)obj);
                 //_drawObjects.AddBinary(obj);
                 //needSomeSort = true;
             }
@@ -115,19 +121,19 @@ namespace Kabochi.Core
         public Wall addWall(float x, float y, float scale)
         {
             Wall obj = new Wall(x, y, scale);
-            addObject(obj);
+            addObject(obj, -1);
             return obj;
         }
         public Hero addHero(float x, float y, float scale)
         {
             Hero obj = new Hero(x, y, scale);
-            addObject(obj);
+            addObject(obj, -10);
             return obj;
         }
         public SnowFlake addSnowFlake(float x, float y, float scale)
         {
             SnowFlake obj = new SnowFlake(x, y, scale);
-            addObject(obj);
+            addObject(obj, -5);
             return obj;
         }
     }
