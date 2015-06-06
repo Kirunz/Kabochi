@@ -12,6 +12,8 @@ namespace Kabochi.Core
         public int i=0;
         public Random random;
         public IList<GameObject> objects;
+        public IList<DrawableObject> solidObjects;
+        public IList<DrawableObject> movableObjects;
         public int stageWidth;
         public int stageHeight;
         public Hero hero;
@@ -21,14 +23,31 @@ namespace Kabochi.Core
             game = game_m;
             random = new Random();
             objects = game.objectManager.gameObjects;
+            solidObjects = game.objectManager.solidObjects;
+            movableObjects = game.objectManager.movableObjects;
             stageWidth = 3000;
             stageHeight = 3000;
-            for (int i = 0; i < 10000; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 game.objectManager.addSnowFlake((float)(random.NextDouble() * stageWidth), (float)(random.NextDouble() * stageHeight), (float)(0.7+random.NextDouble()*2));
             }
+
+            for (int i = 0; i < 30; i++)
+            {
+                game.objectManager.addWall(100, 200 + i * 32, 1);
+            }
             hero = game.objectManager.addHero(300f, 400f, 5);
             
+        }
+        public bool Collision(DrawableObject a, DrawableObject b) //Обрабатывает последствия столкновения
+        {
+            return (Math.Abs(a.position.X - b.position.X) < (a.width / 2 + b.width / 2) &&
+                        Math.Abs(a.position.Y - b.position.Y) < (a.height / 2 + b.height / 2)); //correct collision with && is boooring
+
+            //!(this.position.Y < (b.position.Y + b.height) ||
+            //    (this.position.Y + this.height) > b.position.Y ||
+            //    (this.position.X + this.width) < b.position.X ||
+            //    this.position.X > (b.position.X + b.width));
         }
 
         public void GameStep()
@@ -57,23 +76,15 @@ namespace Kabochi.Core
             i++;
             
             game.drawManager.view.moveA();
-            foreach (GameObject obj in objects)
+            //Проверка столкновений
+            foreach (DrawableObject obj in movableObjects)
             {
-                if (obj != hero)
-                { if(hero.CollidesWith((DrawableObject)obj))
-                    {
-                        SnowFlake a = (SnowFlake)obj;
-                        a.brush = System.Drawing.Brushes.Red;
-                    } 
-                    else
-                    {
-                        SnowFlake a = (SnowFlake)obj;
-                        if (System.Windows.Point.Subtract(a.position,hero.position).Length>300)
-                            a.brush = System.Drawing.Brushes.Azure;
-                        else
-                            a.brush = System.Drawing.Brushes.Pink;
-                    } 
-                }
+                foreach (DrawableObject obj2 in solidObjects)
+                    if (this.Collision(obj, obj2) && obj2!=obj)
+                        obj.CollisionWith(obj2);
+            }
+            foreach (GameObject obj in objects) //Вот это нужно оптимизировать
+            {
                 obj.Update(this);
             }
         }

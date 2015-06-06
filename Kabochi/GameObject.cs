@@ -9,6 +9,9 @@ namespace Kabochi
     class GameObject
     {
         public bool drawable=false;
+        public bool collidable = false;
+        public bool movable = false;
+        public bool solid = false;
         public GameObject()
         {
         }

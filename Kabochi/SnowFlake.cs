@@ -14,6 +14,7 @@ namespace Kabochi
         public SnowFlake(float x_m, float y_m, float scale_m)
         {
             drawable = true;
+            movable = true;
             depth = 0;
             _angle = 270;
             _speed = 1.2f;
@@ -27,7 +28,14 @@ namespace Kabochi
             grafx.Graphics.FillEllipse(brush, x, y, width, height);
 
         }
-
+        public override void CollisionWith(DrawableObject b)
+        {
+            //base.CollisionWith(b);
+            //if (b.GetType().Name == "Hero")
+            //{
+                this.brush = System.Drawing.Brushes.Red;
+            //}
+        }
         override public void Update(Core.GameLogic gameLogic)
         {
             if (position.Y > gameLogic.stageHeight)
