@@ -16,6 +16,7 @@ namespace Kabochi
         public Brush brush;
         public Random random;
         private System.Windows.Point previousPosition;
+        private int i = 0;
         public Hero(float x_m, float y_m, float scale_m)
         {
             Spr.SetFrames("MulticolorTanks.png", 8, 8); // TODO добавлена строка
@@ -37,8 +38,13 @@ namespace Kabochi
             //grafx.Graphics.FillRectangle(brush, x, y, width, height);
          //   for (int i = 0; i < 120; i++)
            //     grafx.Graphics.FillRectangle(brush, (float)(x + random.NextDouble() * width), (float)(y + random.NextDouble() * height), 1, 1); // TODO заккоментировано
-            Spr.GetSprite("MulticolorTanks.png").Draw(grafx, (float)(x + random.NextDouble() * width), (float)(y + random.NextDouble() * height),63); // TODO добалена строка
+            i++;
+            Spr.GetSprite("MulticolorTanks.png").Draw(grafx, (float)(x + random.NextDouble() * width), (float)(y + random.NextDouble() * height),i,90); // TODO добалена строка
             Spr.GetSprite("test.png").Draw(grafx, (float)(x + random.NextDouble() * width + 20), (float)(y + random.NextDouble() * height - 300), 800);
+            if (i == 7)
+            {
+                i = 0;
+            }
         }
 
         override public void Update(Core.GameLogic gameLogic)

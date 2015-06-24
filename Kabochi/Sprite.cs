@@ -25,8 +25,27 @@ namespace Kabochi
                 return ImgArr[0];
             }
         }
-        public void Draw(BufferedGraphics grafx, float x, float y,int frame = 0)
+
+        public Bitmap Rotate(int degree,int frame)
         {
+            switch (degree)
+            {
+                case 90:
+                    Get(frame).RotateFlip(RotateFlipType.Rotate90FlipNone);
+                    break;
+                case 180:
+                    Get(frame).RotateFlip(RotateFlipType.Rotate180FlipNone);
+                    break;
+                case 270:
+                    Get(frame).RotateFlip(RotateFlipType.Rotate270FlipNone);
+                    break;
+            }
+            return Get(frame);
+        }
+        public void Draw(BufferedGraphics grafx, float x, float y,int frame = 0, int degree = 0)
+        {
+            if (degree > 0)
+                Rotate(degree, frame);
             grafx.Graphics.DrawImage(Get(frame), x, y);
             
         }
