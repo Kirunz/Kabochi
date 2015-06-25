@@ -7,6 +7,7 @@ using System.Collections;
 using System.Globalization;
 //using System.Threading;
 using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace Kabochi
 {
@@ -158,7 +159,12 @@ namespace Kabochi
                         grafx.Graphics.DrawString(Convert.ToString(fps), font, Brushes.Red, new Point(0, 0));
                         grafx.Graphics.DrawString(Convert.ToString(drawNum), font, Brushes.Red, new Point(0, 30));
                         grafx.Graphics.DrawLine(new Pen(Color.White,64.0f), new Point((int)-view.x, game.gameLogic.stageHeight - (int)view.y), new Point(game.gameLogic.stageWidth - (int)view.x, game.gameLogic.stageHeight - (int)view.y));
-             }
+                int l = Cursor.Position.X;
+                int s = Cursor.Position.Y;
+                Stats.SetStat("lives", l);
+                Stats.SetStat("scores", s);
+                Stats.Draw(grafx);
+            }
         }
     }
 }
